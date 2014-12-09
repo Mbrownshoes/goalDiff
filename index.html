@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<style>
+
+text {
+  font: 10px sans-serif;
+
+}
+
+</style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -9,6 +17,8 @@ var width = 960,
     padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
+
+var format = d3.format(",d");
 
 var n = 30, // total number of nodes
     m = 2; // number of distinct clusters
@@ -82,6 +92,22 @@ var node = svg.selectAll("circle")
     .style("fill", function(d) { return color(d.cluster); })
     .call(force.drag);
 
+
+
+node.append("text")
+      .attr("dy", ".3em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.team.substring(0, d.r / 3); });
+
+node.append("title")
+	.text(function(d) {
+		if (d.val == "positive")
+			return d.team + ": " + format(d.goalDiff - 1); 
+		else
+			return d.team + ": " + format(d.goalDiff - 1);
+			 });
+
+
 node.transition()
     .duration(750)
     .delay(function(d, i) { return i * 5; })
@@ -89,6 +115,7 @@ node.transition()
       var i = d3.interpolate(0, d.radius);
       return function(t) { return d.radius = i(t); };
     });
+
 
 function tick(e) {
   node
