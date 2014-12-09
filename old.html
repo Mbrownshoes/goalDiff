@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<met charset="utf-8">
+<style>
+text {
+  font: 10px sans-serif;
+  fill: white;
+}
+
+circle {
+  stroke: #000;
+  stroke-width: .5px;
+}
+
+/*body {
+        background-color: #636363;
+        padding-left: 50px;
+      }*/
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="colorbrewer.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script>
+
+// D3 Bubble Chart 
+
+var width = 960, height = 500, padding = 1.5, clusterPadding = 6, format = d3.format(",d");
+
+
+var clusters = new Array(2);
+
+var colorPos = d3.scale.quantize()
+				.range(["#d0d1e6","#a6bddb","#74a9cf","#3690c0","#0570b0","#034e7b"]);
+
+var colorNeg = d3.scale.quantize()
+			.range(["#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"]);
+
+var svg = d3.select('body').append('svg')
+				.attr('width', width)
+				.attr('height', height)
+				.attr("class", "bubble");
+
+var bubble = d3.layout.pack()
+	.size([width, height])
+	.value(function(d) {return d.size;})
+	.sort(function(a, b) {
+	return (a.value + b.value)
+	}) 
+	.padding(1.5);
+
+
+
+var dataset
+// generate data with calculated layout values
+d3.json("goalDiff_data.json", function(error, root) {
+	var node = svg.selectAll(".node")
+		.data(bubble.nodes(processData(root))
+		.filter(function(d) { return !d.children; }))
+		.enter()
+		.append("g")
+		.attr("class", "node") 
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+		dataset = bubble.nodes(processData(root))
+
+clusters[0] = {cluster: 0, radius: 15};
+clusters[1] = {cluster: 1, radius: 15};
+		
+var force = d3.layout.force()
+	.nodes(node)
+	.size([width, height])
+	.gravity(.02)
+	.charge(0)
+	.on("tick", tick)
+	.start()
+	
+colorPos.domain([
+				d3.min(bubble.nodes(processData(root)), function(d) { 
+					if (d.val == "positive")
+						return d.value;
+						 }),
+				d3.max(bubble.nodes(processData(root)), 
+						function(d) {
+						if (d.val == "positive")
+						 return d.value; })
+				]);
+
+colorNeg.domain([
+				d3.min(bubble.nodes(processData(root)), function(d) { 
+					if (d.val == "negative")
+						return d.value;
+						 }),
+				d3.max(bubble.nodes(processData(root)), 
+						function(d) {
+						if (d.val == "negative")
+						 return d.value; })
+				]);
+
+  node.append("title")
+      .text(function(d) {
+      if (d.val == "positive")
+      	return d.className + ": " + format(d.value - 1); 
+      else
+      	return d.className + ": " + format(-(d.value - 1));
+      	 });
+
+  node.append("circle")
+      .attr("r", function(d) { return d.r; })
+      .style("fill", function(d) {
+      	if (d.val == "positive") {
+	       return colorPos(d.value);}
+		else
+			return colorNeg(d.value);	   
+	        });
+
+  node.append("text")
+      .attr("dy", ".3em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.className.substring(0, d.r / 3); });
+
+function tick(e) {
+	node
+		.each(cluster(10 * e.alpha * e.alpha ))
+		.each(collide(.5))
+		.attr("cx", function(d) { return d.x; })
+		attr("cy", function(d) { return d.y; });
+}
+
+function cluster(alpha) {
+  return function(d) {
+    var cluster = clusters[d.cluster];
+    if (cluster === d) return;
+    var x = d.x - cluster.x,
+        y = d.y - cluster.y,
+        l = Math.sqrt(x * x + y * y),
+        r = d.radius + cluster.radius;
+    if (l != r) {
+      l = (l - r) / l * alpha;
+      d.x -= x *= l;
+      d.y -= y *= l;
+      cluster.x += x;
+      cluster.y += y;
+    }
+  };
+};
+});
+
+
+
+function processData(data) {
+var obj = data;
+var newDataSet = [];
+
+for(var prop in obj) {
+	// console.log({name: prop, className: prop.toLowerCase(), size: Number(obj[prop])})
+	if (Number(obj[prop]) < 0) {
+		posNum = Number(obj[prop]) * -1;
+      newDataSet.push({name: prop, className: prop.toLowerCase(), size: posNum, val: 'negative', cluster: 1})
+	  }
+	else
+		newDataSet.push({name: prop, className: prop.toLowerCase(), size: Number(obj[prop]) + 1, val: 'positive', cluster: 2})
+  // 
+}
+return {children: newDataSet};
+}
+
+
+
+</script>
