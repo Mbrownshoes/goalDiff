@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link rel="stylesheet" href="main.css"> 
+
 <style>
 
 text {
@@ -35,8 +37,13 @@ text {
 
 </style>
 <body>
-	<div id = "tooltip" class="hidden">
-		<p><span id="goalDiff">0</spam></p>
+	
+<h1>NHL Team Goal Differential</h1>
+<h2>2014-2015 season</h2>
+<p>Mike Babcock seems to think goal differential is a key proxy for determining how strong teams really are.<span style="color:#1f77b4"> Blue</span> bubbles are the teams with a <span style="color:#1f77b4">positive</span> goal differential while <span style="color:#d62728">red</span> bubbles are those with a <span style="color:#d62728">negative</span> differential. Updates daily.</p>
+
+<div id = "tooltip" class="hidden">
+		<span id="goalDiff">0</spam>
 	</div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -126,7 +133,7 @@ var node = svg.selectAll("circle")
     	//Update the tooltip position and value
     	d3.select("#tooltip")
     		.style("left", xPosition + "px")
-    		.style("top", yPosition + "px")
+    		.style("top", yPosition + 200 + "px")
     		.select("#goalDiff")
     		.text(d.team + ": " + format(d.goalDiff));
 
