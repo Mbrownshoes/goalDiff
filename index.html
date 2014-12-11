@@ -4,6 +4,7 @@
 
 <style>
 
+
 text {
   font: 10px sans-serif;
 
@@ -37,15 +38,15 @@ text {
 
 </style>
 <body>
-	
 <h1>NHL Team Goal Differential</h1>
-<h2>2014-2015 season</h2>
-<p>Mike Babcock seems to think goal differential is a key proxy for determining how strong teams really are.<span style="color:#1f77b4"> Blue</span> bubbles are the teams with a <span style="color:#1f77b4">positive</span> goal differential while <span style="color:#d62728">red</span> bubbles are those with a <span style="color:#d62728">negative</span> differential. Updates daily.</p>
+<p><img src="babs.png" align="right" height="150">Mike Babcock seems to think goal differential is a key proxy for determining how strong teams really are. <span style="color:#1f77b4"> Blue</span> bubbles are the teams with a <span style="color:#1f77b4">positive</span> goal differential while <span style="color:#d62728">red</span> bubbles are those with a <span style="color:#d62728">negative</span> differential. Updates daily (2014-2015 season).</p>
+
 
 <div id = "tooltip" class="hidden">
 		<span id="goalDiff">0</spam>
 	</div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<div>
 <script>
 
 var width = 960,
@@ -243,3 +244,7 @@ function collide(alpha) {
 }
 });
 </script>
+</div>
+	<footer>
+<p>Built by <a href="http://mbrownshoes.github.io/#/">Mathew Brown.</a><p>
+</footer>

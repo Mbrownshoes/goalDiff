@@ -27,21 +27,21 @@ h1, h2 {
   text-rendering: optimizeLegibility;
 }
 
-h2 a {
+/*h2 a {
   color: #ccc;
   left: -20px;
   position: absolute;
   width: 740px;
-}
+}*/
 
-.date {
+/*.date {
   color: #aaa;
   margin-left: 1em;
 }
 
 footer {
   margin-top: 8em;
-}
+}*/
 
 aside {
   font-size: small;
