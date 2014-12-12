@@ -38,8 +38,19 @@ text {
 
 </style>
 <body>
-<h1>NHL Team Goal Differential</h1>
-<p><img src="babs.png" align="right" height="150">Mike Babcock seems to think goal differential is a key proxy for determining how strong teams really are. <span style="color:#1f77b4"> Blue</span> bubbles are the teams with a <span style="color:#1f77b4">positive</span> goal differential while <span style="color:#d62728">red</span> bubbles are those with a <span style="color:#d62728">negative</span> differential. Updates daily (2014-2015 season).</p>
+	<div id="wrapper">
+    <div id="leftcolumn">
+        <h1>NHL Team Goal Differential</h1>
+<p>Mike Babcock seems to think goal differential is a key proxy for determining how strong teams really are. <span style="color:#1f77b4"> Blue</span> bubbles are the teams with a <span style="color:#1f77b4">positive</span> goal differential while <span style="color:#d62728">red</span> bubbles are those with a <span style="color:#d62728">negative</span> differential. Updates daily (2014-2015 season).</p>
+<p>Built by <a href="http://mbrownshoes.github.io/#/">Mathew Brown.</a><p>
+    </div>
+    <div id="rightcolumn">
+        <img src="babs.png" width="300"/>
+
+    </div>
+</div>
+
+
 
 
 <div id = "tooltip" class="hidden">
@@ -130,7 +141,6 @@ var node = svg.selectAll("circle")
     .on("mouseover", function(d){
     	var xPosition = parseFloat(d3.select(this).attr("cx"))
     	var yPosition = parseFloat(d3.select(this).attr("cy"))
-    	console.log(xPosition)
     	//Update the tooltip position and value
     	d3.select("#tooltip")
     		.style("left", xPosition + "px")
@@ -185,14 +195,17 @@ node.transition()
 
 
 function tick(e) {
+
   node
-      .each(cluster(10 * e.alpha * e.alpha))
+      .each(cluster(10 * e.alpha* e.alpha))
       .each(collide(.5))
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
 
 	labels.attr("x", function(d) { return d.x; })
 		.attr("y", function(d) { return d.y; });
+
+
 }
 
 // Move d to be adjacent to the cluster node.
@@ -211,8 +224,12 @@ function cluster(alpha) {
       cluster.x += x;
       cluster.y += y;
     }
+ //    if (cluster.cluster == 2){
+	// 	cluster.y -= .05;
+	// }
+	// else
+	// 	cluster.y += .05;
   };
-
 }
 
 // Resolves collisions between d and all other circles.
@@ -237,6 +254,7 @@ function collide(alpha) {
           quad.point.x += x;
           quad.point.y += y;
         }
+   
       }
       return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
     });
@@ -245,6 +263,4 @@ function collide(alpha) {
 });
 </script>
 </div>
-	<footer>
-<p>Built by <a href="http://mbrownshoes.github.io/#/">Mathew Brown.</a><p>
-</footer>
+
